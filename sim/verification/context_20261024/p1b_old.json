@@ -1,0 +1,11 @@
+{
+  "ckpt": "out/context_deploy.pt",
+  "sessions": [
+    "20261023_172649"
+  ],
+  "n": 66,
+  "confusion": {
+    "phone->cigarette": 33,
+    "cigarette->cigarette": 33
+  }
+}

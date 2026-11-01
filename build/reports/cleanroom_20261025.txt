@@ -1,0 +1,52 @@
+Clean-room rebuild of the submission package
+Date: 2026-10-25
+Host: Windows 11, Vivado/Vitis 2026.1
+Source: a fresh copy of this package, extracted to C:\dmsclean\dms_zynq7020
+        (short path required by the Windows 260-character limit)
+
+Steps and results
+-----------------
+1) .\build_ip.bat  (all four kernels)
+   eye_cnn      1m27s   installed into src/vivado/project/ip_repo/eye_cnn_accel
+   img_preproc  0m56s   installed .../img_preproc_accel
+   video_box    0m32s   installed .../video_box_accel
+   context_cnn  1m10s   installed .../context_cnn_accel
+
+2) vivado -mode batch -source ../refresh_all_ip.tcl
+   design_1_eye_cnn_accel_0_0        locked: 1 -> 0
+   design_1_img_preproc_accel_0_0    locked: 1 -> 0
+   design_1_video_box_accel_0_3      locked: 1 -> 0
+   design_1_context_cnn_accel_0_0    locked: 1 -> 0
+   checked 47 generated ROM copy/copies, 0 problem(s)
+   All weight ROMs match ip_repo (problems before: 47).
+
+3) vivado -mode batch -source ../build_bitstream.tcl
+   SYNTHESIS OK
+   IMPLEMENTATION OK
+   TIMING MET
+   WNS = 0.274 ns   WHS = 0.034 ns
+   cam_pclk WNS = 8.403 ns
+   clk_fpga_0 WNS = 0.274 ns
+   Vivado exit code: 0
+
+Resources (post-route, design_1_wrapper_utilization_placed.rpt)
+----------------------------------------------------------------
+Slice LUTs        38,087 / 53,200 = 71.59 %
+Slice Registers   41,800 / 106,400 = 39.29 %
+Block RAM Tile        81.5 / 140   = 58.21 %
+DSPs                   140 / 220   = 63.64 %
+
+Exported overlay
+----------------
+board/design_1.bit   md5 de23540fa91725f09a1c232dba260cc9
+board/design_1.hwh   copied from ov5640_hdmi.gen/.../hw_handoff/design_1.hwh
+The bit md5 differs from the pre-installed board-verified bit (75a9dee4...)
+because Vivado embeds a build timestamp; functional equivalence is covered by
+the bit-exact HLS C simulations and the 47/47 ROM check.
+
+Notes
+-----
+- [IP_Flow 19-194] "Failed to save IP instance" messages during refresh are
+  transient upgrade warnings; the final 47/47 ROM check and the build passed.
+- Without a short extraction path, generate_target fails with
+  [Common 17-680] Path length exceeds 260-Byte maximum.

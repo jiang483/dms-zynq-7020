@@ -1,0 +1,12 @@
+{
+  "ckpt": "out_monitor_old/context_fold0.pt",
+  "sessions": [
+    "20261023_172649"
+  ],
+  "n": 66,
+  "confusion": {
+    "phone->none": 33,
+    "cigarette->none": 2,
+    "cigarette->cigarette": 31
+  }
+}
